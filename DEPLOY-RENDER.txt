@@ -1,0 +1,52 @@
+DEPLOY GOLDEN GOALS CINEMATIC KE RENDER FREE
+
+Konfigurasi siap di Dockerfile, docker/, .dockerignore dan render.yaml.
+Proyek ini adalah root repository GitHub; jangan unggah seluruh workspace
+yang berisi orbit-laravel, QA browser, video referensi, atau proyek lain.
+
+YANG PERLU DIHUBUNGKAN
+1. Akun GitHub untuk menyimpan source code (default: repository privat).
+2. Akun Render untuk menjalankan aplikasi.
+3. Izinkan Render mengakses hanya repository proyek ini saat diminta.
+Jangan mengirim password, OTP, token, atau isi .env ke chat.
+
+DEPLOY DENGAN BLUEPRINT
+Di Render pilih New > Blueprint, hubungkan repository proyek ini.
+Render membaca render.yaml di root repository.
+Pastikan layanan yang dibuat hanya golden-goals-cinematic, plan Free.
+Tidak ada database atau layanan berbayar pada Blueprint ini.
+LARAVEL_APP_SECRET dibuat dan disimpan oleh Render, lalu diubah menjadi
+APP_KEY Laravel di entrypoint tanpa dicetak atau ditulis ke source.
+APP_URL dan ASSET_URL mengikuti RENDER_EXTERNAL_URL secara otomatis.
+Endpoint health check: /up. Port Apache mengikuti PORT dari Render.
+
+JIKA MEMAKAI NEW > WEB SERVICE SECARA MANUAL
+Runtime: Docker. Plan: Free. Dockerfile: ./Dockerfile. Context: .
+Salin pengaturan envVars dari render.yaml, dengan secret 32 byte base64
+untuk LARAVEL_APP_SECRET. Jangan masukkan secret literal ke repository.
+Nama onrender.com mengikuti ketersediaan; URL sebenarnya baru bisa
+dipastikan setelah Render membuat layanan.
+
+PERILAKU PRODUKSI
+Laravel tetap berjalan penuh. Halaman tidak membutuhkan database.
+HTTPS dipaksakan untuk URL Laravel pada APP_ENV=production.
+Session disimpan dalam cookie terenkripsi; cache file boleh hilang
+saat Render restart/tidur karena hanya data sementara.
+.env lokal dan vendor dikecualikan dari image; Composer menginstal paket
+produksi di dalam image. Video referensi tidak menjadi bagian proyek.
+
+BATAS FREE
+Layanan tidur setelah 15 menit tanpa trafik; cold start sekitar 1 menit.
+Filesystem Render tidak persisten. Jika nanti ada unggahan pengguna atau
+database, penyimpanannya harus dirancang terpisah.
+Tidak perlu membeli domain; Render menyediakan subdomain onrender.com.
+
+STATUS VALIDASI
+Tes aplikasi dan konfigurasi dapat diperiksa secara lokal.
+Build Docker memerlukan Docker Desktop/daemon yang berjalan, atau build
+di Render setelah akun dan repository terhubung.
+
+SUMBER
+https://render.com/docs/deploy-php-laravel-docker
+https://render.com/docs/blueprint-spec
+https://render.com/docs/free
